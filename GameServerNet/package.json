@@ -1,0 +1,28 @@
+{
+  "name": "alpaca-server-net",
+  "version": "1.0.0",
+  "devDependencies": {
+    "copy-dir": "^0.3.0",
+    "fstream": "^1.0.11",
+    "grunt": "~0.4.5",
+    "grunt-cli": "^1.2.0",
+    "grunt-ssh": "^0.12.9",
+    "gulp": "^3.9.1",
+    "gulp-grunt": "^0.5.5",
+    "inquirer": "^2.0.0",
+    "node-ssh": "^4.2.2",
+    "nodejs-websocket": "^1.7.1",
+    "rimraf": "^2.6.1",
+    "scp2": "^0.5.0",
+    "ssh2": "^0.5.4",
+    "tar": "^2.2.1",
+    "wait-until": "0.0.2"
+  },
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
