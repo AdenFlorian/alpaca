@@ -9,6 +9,7 @@ public class NetObjGene : MonoBehaviour
 	public NetObj NetObj;
     public bool IsLocalPlayer = false;
     DateTime _positionLastSentTime;
+    public bool OfflineMode;
 
 	void Start()
 	{
@@ -17,7 +18,7 @@ public class NetObjGene : MonoBehaviour
 	
 	void Update()
 	{
-        if (IsLocalPlayer && IsItTimeToSendPosition())
+        if (IsLocalPlayer && IsItTimeToSendPosition() && OfflineMode == false)
         {
             SendPosition();
         }

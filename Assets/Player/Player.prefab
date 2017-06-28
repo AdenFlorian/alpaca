@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 124443596578124234}
   - component: {fileID: 81429994399685050}
   - component: {fileID: 114007829440297448}
+  - component: {fileID: 114964954423612034}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -120,13 +121,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1053206460849128}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.65, z: 0}
+  m_LocalRotation: {x: -0.13718516, y: 0, z: 0, w: 0.99054545}
+  m_LocalPosition: {x: 0, y: 1.65, z: 0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4442011174283746}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -15.77, y: 0, z: 0}
 --- !u!4 &4309636607029476
 Transform:
   m_ObjectHideFlags: 1
@@ -147,7 +148,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1408847333529838}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 131, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4185293820256538}
@@ -186,8 +187,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 0.24
+  far clip plane: 10000
   field of view: 74.9
   orthographic: 0
   orthographic size: 5
@@ -346,7 +347,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 0.43
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
@@ -414,7 +415,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 237531ea2ba804b42b8274e9e36e2468, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLocalPlayer: 0
+  IsLocalPlayer: 1
+  OfflineMode: 1
+--- !u!114 &114964954423612034
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1053206460849128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c87de639cec6f440aa0c71802586e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Max: 75
+  Min: -75
 --- !u!124 &124443596578124234
 Behaviour:
   m_ObjectHideFlags: 1

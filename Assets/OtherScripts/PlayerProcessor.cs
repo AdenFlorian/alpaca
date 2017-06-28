@@ -43,6 +43,7 @@ public class PlayerProcessor : MonoBehaviour
             var go = Instantiate(PlayerPrefab, Vector3.right * 200, Quaternion.identity);
             var newPlayer = go.GetComponent<Player>();
             newPlayer.NetObjGene.IsLocalPlayer = true;
+            newPlayer.NetObjGene.OfflineMode = false;
             newPlayer.NetObjGene.NetObj = new NetObj { Id = Guid.NewGuid(), GameClientId = GameClient.Instance.Id, Type = NetObjType.Player };
 
             GameClient.Instance.SendNetObjCreate(newPlayer.NetObjGene.NetObj);
@@ -54,13 +55,12 @@ public class PlayerProcessor : MonoBehaviour
                 var go = Instantiate(ZombiePrefab, Vector3.right * 200 + new Vector3(UnityEngine.Random.Range(4, 20), UnityEngine.Random.Range(4, 20), UnityEngine.Random.Range(4, 20)), Quaternion.identity);
                 var newZombie = go.GetComponent<Zombie>();
                 newZombie.NetObjGene.IsLocalPlayer = true;
+                newZombie.NetObjGene.OfflineMode = false;
                 newZombie.NetObjGene.NetObj = new NetObj { Id = Guid.NewGuid(), GameClientId = GameClient.Instance.Id, Type = NetObjType.Zombie };
 
                 GameClient.Instance.SendNetObjCreate(newZombie.NetObjGene.NetObj);
             }
         }
-
-        
 
         //InstantiateExistingNetObjects(payload.ExistingNetObjects);
     }
@@ -94,9 +94,11 @@ public class PlayerProcessor : MonoBehaviour
 
         switch (otherNetObj.Type)
         {
-            case NetObjType.Player: prefab = PlayerPrefab;
+            case NetObjType.Player:
+                prefab = PlayerPrefab;
                 break;
-            case NetObjType.Zombie: prefab = ZombiePrefab;
+            case NetObjType.Zombie:
+                prefab = ZombiePrefab;
                 break;
             default: throw new Exception("bad netobj type");
         }
@@ -104,6 +106,8 @@ public class PlayerProcessor : MonoBehaviour
         var go = Instantiate(prefab, Vector3.zero, Quaternion.identity);
         var netObjGene = go.GetComponent<NetObjGene>();
         netObjGene.NetObj = otherNetObj;
+        netObjGene.IsLocalPlayer = false;
+        netObjGene.OfflineMode = true;
         var camera = go.GetComponentInChildren<Camera>();
         if (camera != null) camera.enabled = false;
         var listener = go.GetComponentInChildren<AudioListener>();

@@ -5,6 +5,7 @@
 /[Bb]uilds/
 /Assets/AssetStoreTools*
 /Assets/PostProcessing/
+/Assets/Standard Assets/
 AlpacaCommon.dll
 
 # Visual Studio 2015 cache directory

@@ -14,13 +14,13 @@ public class Player : MonoBehaviour
     public Camera Camera;
     public NetObjGene NetObjGene;
 
-    Rigidbody rigidbody;
+    Rigidbody _rigidbody;
 
     float localYRotation;
 
 	void Start()
 	{
-		rigidbody = GetComponent<Rigidbody>();
+		_rigidbody = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         localYRotation = transform.localEulerAngles.y;
@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                rigidbody.AddForce(transform.up * JumpForce, ForceMode.Impulse);
+                _rigidbody.AddForce(transform.up * JumpForce, ForceMode.Impulse);
             }
 
             localYRotation += Input.GetAxis("Mouse X");
@@ -53,7 +53,6 @@ public class Player : MonoBehaviour
             transform.eulerAngles += new Vector3(90, 0, 0);
             
             transform.Rotate(Vector3.up, localYRotation, Space.Self);
-            Camera.transform.Rotate(Vector3.right, -Input.GetAxis("Mouse Y"), Space.Self);
         }
 	}
 
@@ -85,7 +84,7 @@ public class Player : MonoBehaviour
             var moveForce = moveVector * Time.fixedDeltaTime;
             var gravityForce = fromMeToOrigin * gravity * Time.fixedDeltaTime;
 
-            rigidbody.AddForce(moveForce + gravityForce, ForceMode.VelocityChange);
+            _rigidbody.AddForce(moveForce + gravityForce, ForceMode.VelocityChange);
         }
     }
 }

@@ -11,11 +11,11 @@ public class Zombie : MonoBehaviour
 
     public NetObjGene NetObjGene;
 
-    Rigidbody rigidbody;
+    Rigidbody _rigidbody;
 
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        _rigidbody = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         transform.rotation = Random.rotation;
@@ -28,7 +28,7 @@ public class Zombie : MonoBehaviour
         {
             if (Random.Range(1, 100) < 1.3f)
             {
-                rigidbody.AddForce(transform.up * JumpForce, ForceMode.Impulse);
+                _rigidbody.AddForce(transform.up * JumpForce, ForceMode.Impulse);
             }
 
             var fromMeToOrigin = (Vector3.zero - transform.position).normalized;
@@ -45,7 +45,7 @@ public class Zombie : MonoBehaviour
 
             var gravityForce = fromMeToOrigin * gravity * Time.fixedDeltaTime;
 
-            rigidbody.AddForce(gravityForce, ForceMode.VelocityChange);
+            _rigidbody.AddForce(gravityForce, ForceMode.VelocityChange);
         }
     }
 }
