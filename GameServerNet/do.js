@@ -4,7 +4,7 @@ const zlib = require('zlib')
 
 const projectName = 'GameServerNet'
 const projectFolder = `.`
-const buildOutputFolder = `${projectFolder}/bin/debug/netcoreapp1.1`
+const buildOutputFolder = `${projectFolder}/bin/debug/netcoreapp2.0`
 const publishFolder = `${buildOutputFolder}/publish`
 
 var secret;

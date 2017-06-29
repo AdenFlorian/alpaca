@@ -16,7 +16,7 @@ const projectFileName = `${projectName}.csproj`
 const projectFilePath = `${projectFolder}/${projectFileName}`
 
 const projectBinFolder = `${projectFolder}/bin`
-const buildOutputFolder = `${projectBinFolder}/debug/netcoreapp1.1`
+const buildOutputFolder = `${projectBinFolder}/debug/netcoreapp2.0`
 const publishFolder = `${buildOutputFolder}/publish`
 
 const tarFileName = `${projectName}.tar.gz`
