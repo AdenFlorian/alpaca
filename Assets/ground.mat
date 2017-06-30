@@ -8,7 +8,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: ground
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: _DETAIL_MULX2
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -23,8 +23,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: 18214e9d6af6248559d501391856f1c7, type: 3}
+        m_Scale: {x: 5.33, y: 3.37}
         m_Offset: {x: 0, y: 0}
     - _DetailMask:
         m_Texture: {fileID: 0}
@@ -36,11 +36,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 62.04, y: 94.26}
+        m_Scale: {x: 145.27, y: 203.3}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: c6e0767b1f8c34890ac245217f4b9731, type: 3}
-        m_Scale: {x: 62.04, y: 94.26}
+        m_Scale: {x: 145.27, y: 203.3}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -72,5 +72,5 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.78701824, g: 0.38235295, b: 1, a: 1}
+    - _Color: {r: 1, g: 0.5586207, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

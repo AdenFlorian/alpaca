@@ -164,7 +164,7 @@ MonoBehaviour:
     type: 2}
   ZombiePrefab: {fileID: 1882415107291512, guid: 17f7bac9d0e66c14ea6b346bfe24220c,
     type: 2}
-  isPlayer: 0
+  isPlayer: 1
 --- !u!1001 &1505042451
 Prefab:
   m_ObjectHideFlags: 0
