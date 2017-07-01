@@ -9,6 +9,8 @@ public class PlayerProcessor : MonoBehaviour
 {
     public GameObject PlayerPrefab;
     public GameObject ZombiePrefab;
+    public Transform PlayerSpawnPosition;
+
     Dictionary<Guid, NetObjGene> _otherNetObjs = new Dictionary<Guid, NetObjGene>();
 
     public bool isPlayer = false;
@@ -40,7 +42,7 @@ public class PlayerProcessor : MonoBehaviour
 
         if (isPlayer)
         {
-            var go = Instantiate(PlayerPrefab, Vector3.right * 200, Quaternion.identity);
+            var go = Instantiate(PlayerPrefab, PlayerSpawnPosition.position, Quaternion.identity);
             var newPlayer = go.GetComponent<Player>();
             newPlayer.NetObjGene.IsLocalPlayer = true;
             newPlayer.NetObjGene.OfflineMode = false;
@@ -52,7 +54,7 @@ public class PlayerProcessor : MonoBehaviour
         {
             for (int i = 0; i < 10; i++)
             {
-                var go = Instantiate(ZombiePrefab, Vector3.right * 200 + new Vector3(UnityEngine.Random.Range(4, 20), UnityEngine.Random.Range(4, 20), UnityEngine.Random.Range(4, 20)), Quaternion.identity);
+                var go = Instantiate(ZombiePrefab, PlayerSpawnPosition.position + new Vector3(UnityEngine.Random.Range(6, 30), UnityEngine.Random.Range(4, 20), UnityEngine.Random.Range(4, 20)), Quaternion.identity);
                 var newZombie = go.GetComponent<Zombie>();
                 newZombie.NetObjGene.IsLocalPlayer = true;
                 newZombie.NetObjGene.OfflineMode = false;

@@ -135,8 +135,8 @@ public class GameClient : MonoBehaviour
         var json = JsonConvert.SerializeObject(message);
         var jsonBytes = Encoding.UTF8.GetBytes(json);
 
-        //_client.SendAsync(jsonBytes, jsonBytes.Length, "alpaca.AdenFlorian.com", 20547);
-        _client.SendAsync(jsonBytes, jsonBytes.Length, "localhost", 20547);
+        _client.SendAsync(jsonBytes, jsonBytes.Length, "alpaca.AdenFlorian.com", 20547);
+        //_client.SendAsync(jsonBytes, jsonBytes.Length, "localhost", 20547);
 
         MyLogger.LogTrace("msg sent: " + message);
         _messagesSentInLastSecond++;

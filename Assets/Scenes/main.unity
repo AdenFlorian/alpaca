@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: c55afdc4a8a3b4890b07cc7d176510bb, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: d8c0d4010f9416945912d97b9e581cf6, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.13208845, g: 0.25186566, b: 0.33734956, a: 1}
+  m_IndirectSpecularColor: {r: 0.002295508, g: 0.0021072954, b: 0.0022222498, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -143,7 +143,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 667981838}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -20.159206, y: 134.04062, z: 23.257133}
+  m_LocalPosition: {x: 586, y: 924.6, z: 896.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -164,7 +164,8 @@ MonoBehaviour:
     type: 2}
   ZombiePrefab: {fileID: 1882415107291512, guid: 17f7bac9d0e66c14ea6b346bfe24220c,
     type: 2}
-  isPlayer: 1
+  PlayerSpawnPosition: {fileID: 1505042452}
+  isPlayer: 0
 --- !u!1001 &1505042451
 Prefab:
   m_ObjectHideFlags: 0
@@ -207,3 +208,8 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5bf4cc814e546d2479f19c0a7cda405f, type: 2}
   m_IsPrefabParent: 0
+--- !u!4 &1505042452 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4678625916171834, guid: 5bf4cc814e546d2479f19c0a7cda405f,
+    type: 2}
+  m_PrefabInternal: {fileID: 1505042451}
