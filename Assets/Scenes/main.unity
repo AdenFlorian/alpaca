@@ -164,6 +164,8 @@ MonoBehaviour:
     type: 2}
   ZombiePrefab: {fileID: 1882415107291512, guid: 17f7bac9d0e66c14ea6b346bfe24220c,
     type: 2}
+  SpacePlanePrefab: {fileID: 1388423791930566, guid: 119a6b32caaa295449625dc9bf9b3b22,
+    type: 2}
   PlayerSpawnPosition: {fileID: 1505042452}
   isPlayer: 0
 --- !u!1001 &1505042451

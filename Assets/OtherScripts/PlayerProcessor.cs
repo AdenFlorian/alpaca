@@ -9,6 +9,7 @@ public class PlayerProcessor : MonoBehaviour
 {
     public GameObject PlayerPrefab;
     public GameObject ZombiePrefab;
+    public GameObject SpacePlanePrefab;
     public Transform PlayerSpawnPosition;
 
     Dictionary<Guid, NetObjGene> _otherNetObjs = new Dictionary<Guid, NetObjGene>();
@@ -62,6 +63,14 @@ public class PlayerProcessor : MonoBehaviour
 
                 GameClient.Instance.SendNetObjCreate(newZombie.NetObjGene.NetObj);
             }
+
+            var go2 = Instantiate(SpacePlanePrefab, PlayerSpawnPosition.position + new Vector3(UnityEngine.Random.Range(6, 30), UnityEngine.Random.Range(4, 20), UnityEngine.Random.Range(4, 20)), Quaternion.identity);
+            var newPlaneNetObj = go2.GetComponent<NetObjGene>();
+            newPlaneNetObj.IsLocalPlayer = true;
+            newPlaneNetObj.OfflineMode = false;
+            newPlaneNetObj.NetObj = new NetObj { Id = Guid.NewGuid(), GameClientId = GameClient.Instance.Id, Type = NetObjType.SpacePlane };
+
+            GameClient.Instance.SendNetObjCreate(newPlaneNetObj.NetObj);
         }
 
         //InstantiateExistingNetObjects(payload.ExistingNetObjects);
@@ -101,6 +110,9 @@ public class PlayerProcessor : MonoBehaviour
                 break;
             case NetObjType.Zombie:
                 prefab = ZombiePrefab;
+                break;
+            case NetObjType.SpacePlane:
+                prefab = SpacePlanePrefab;
                 break;
             default: throw new Exception("bad netobj type");
         }

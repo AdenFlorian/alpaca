@@ -91,6 +91,7 @@ namespace GameServerNet
                     break;
                 case "netobjcreate":
                     var newNetObj = JsonConvert.DeserializeObject<NetObj>(message.Message.Message.Data.ToString());
+                    _logger.LogInfo("netobjcreate: " + message.Message.Message.Data.ToString());
                     _netObjects[newNetObj.Id] = newNetObj;
                     _messageSender.SendNewNetObjToOtherClients(message.Client, newNetObj);
                     break;

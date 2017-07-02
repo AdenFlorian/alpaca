@@ -9,6 +9,7 @@ namespace AlpacaCommon
 	public enum NetObjType
 	{
 		Player,
-		Zombie
+		Zombie,
+		SpacePlane
 	}
 }
