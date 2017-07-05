@@ -9,9 +9,17 @@ using AlpacaCommon;
 using Newtonsoft.Json;
 using UnityEngine;
 
+public enum GameServerLocation
+{
+    LocalHost,
+    AlpacaTest
+}
+
 public class GameClient : MonoBehaviour
 {
     public static GameClient Instance;
+
+    public GameServerLocation GameServerLocation;
 
     public readonly Guid Id = Guid.NewGuid();
 
@@ -28,9 +36,29 @@ public class GameClient : MonoBehaviour
     int _messagesSentInLastSecond = 0;
     bool _isDestroyed;
 
+    string _serverHostName;
+    int _serverPort;
+
     void Awake()
     {
         Instance = this;
+        SetupServerInfo();
+    }
+
+    void SetupServerInfo()
+    {
+        switch (GameServerLocation)
+        {
+            case GameServerLocation.LocalHost:
+                _serverHostName = "localhost";
+                _serverPort = 20547;
+                break;
+            case GameServerLocation.AlpacaTest:
+                _serverHostName = "alpaca.AdenFlorian.com";
+                _serverPort = 20547;
+                break;
+        }
+        Debug.Log("Game server location set to " + _serverHostName + ":" + _serverPort);
     }
 
 	void Start()
@@ -115,28 +143,18 @@ public class GameClient : MonoBehaviour
         return receivedMsg;
 	}
 
-    void SendNatPunch()
-	{
-        SendMessageToServer(new UdpMessage("natpunch", DateTime.Now.ToString("o")));
-	}
+    void SendNatPunch() => SendMessageToServer(new UdpMessage("natpunch", DateTime.Now.ToString("o")));
 
-    void SendConnect()
-    {
-        SendMessageToServer(new UdpMessage("connect", Id));
-    }
+    void SendConnect() => SendMessageToServer(new UdpMessage("connect", Id));
 
-    public void SendNetObjCreate(NetObj newNetObj)
-    {
-        SendMessageToServer(new UdpMessage("netobjcreate", newNetObj));
-    }
+    public void SendNetObjCreate(NetObj newNetObj) => SendMessageToServer(new UdpMessage("netobjcreate", newNetObj));
 
 	public void SendMessageToServer(object message)
 	{
         var json = JsonConvert.SerializeObject(message);
         var jsonBytes = Encoding.UTF8.GetBytes(json);
 
-        //_client.SendAsync(jsonBytes, jsonBytes.Length, "alpaca.AdenFlorian.com", 20547);
-        _client.SendAsync(jsonBytes, jsonBytes.Length, "localhost", 20547);
+        _client.SendAsync(jsonBytes, jsonBytes.Length, _serverHostName, _serverPort);
 
         MyLogger.LogTrace("msg sent: " + message);
         _messagesSentInLastSecond++;

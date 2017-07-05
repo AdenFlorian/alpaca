@@ -32,56 +32,55 @@ public class PlayerProcessor : MonoBehaviour
         _otherNetObjs.Remove(destroyedNetObjGuid);
     }
 
-    void Update()
-    {
-		
-	}
+    void Update() {}
 
     void OnConnected()
     {
         MyLogger.LogInfo("Connected!");
+        SpawnLocalStuff();
+    }
 
+    void SpawnLocalStuff()
+    {
         if (isPlayer)
         {
-            var go = Instantiate(PlayerPrefab, PlayerSpawnPosition.position, Quaternion.identity);
-            var newPlayer = go.GetComponent<Player>();
-            newPlayer.NetObjGene.IsLocalPlayer = true;
-            newPlayer.NetObjGene.OfflineMode = false;
-            newPlayer.NetObjGene.NetObj = new NetObj { Id = Guid.NewGuid(), GameClientId = GameClient.Instance.Id, Type = NetObjType.Player };
-
-            GameClient.Instance.SendNetObjCreate(newPlayer.NetObjGene.NetObj);
+            SpawnLocalPlayer();
         }
         else
         {
             for (int i = 0; i < 10; i++)
             {
-                var go = Instantiate(ZombiePrefab, PlayerSpawnPosition.position + new Vector3(UnityEngine.Random.Range(6, 30), UnityEngine.Random.Range(4, 20), UnityEngine.Random.Range(4, 20)), Quaternion.identity);
-                var newZombie = go.GetComponent<Zombie>();
-                newZombie.NetObjGene.IsLocalPlayer = true;
-                newZombie.NetObjGene.OfflineMode = false;
-                newZombie.NetObjGene.NetObj = new NetObj { Id = Guid.NewGuid(), GameClientId = GameClient.Instance.Id, Type = NetObjType.Zombie };
-
-                GameClient.Instance.SendNetObjCreate(newZombie.NetObjGene.NetObj);
+                SpawnLocalZombie();
             }
 
-            var go2 = Instantiate(SpacePlanePrefab, PlayerSpawnPosition.position + new Vector3(UnityEngine.Random.Range(6, 30), UnityEngine.Random.Range(4, 20), UnityEngine.Random.Range(4, 20)), Quaternion.identity);
-            var newPlaneNetObj = go2.GetComponent<NetObjGene>();
-            newPlaneNetObj.IsLocalPlayer = true;
-            newPlaneNetObj.OfflineMode = false;
-            newPlaneNetObj.NetObj = new NetObj { Id = Guid.NewGuid(), GameClientId = GameClient.Instance.Id, Type = NetObjType.SpacePlane };
-
-            GameClient.Instance.SendNetObjCreate(newPlaneNetObj.NetObj);
+            SpawnLocalSpacePlane();
         }
-
-        //InstantiateExistingNetObjects(payload.ExistingNetObjects);
     }
 
-    void InstantiateExistingNetObjects(IEnumerable<NetObj> existingNetObjects)
+    void SpawnLocalPlayer()
     {
-        foreach (var netObj in existingNetObjects)
-        {
-            InstantiateOtherNetObj(netObj);
-        }
+        SpawnLocalNetObj(PlayerPrefab, PlayerSpawnPosition.position, NetObjType.Player);
+    }
+
+    void SpawnLocalZombie()
+    {
+        SpawnLocalNetObj(ZombiePrefab, PlayerSpawnPosition.position + new Vector3(UnityEngine.Random.Range(6, 30), UnityEngine.Random.Range(4, 20), UnityEngine.Random.Range(4, 20)), NetObjType.Zombie);
+    }
+
+    void SpawnLocalSpacePlane()
+    {
+        SpawnLocalNetObj(SpacePlanePrefab, PlayerSpawnPosition.position + new Vector3(UnityEngine.Random.Range(6, 30), UnityEngine.Random.Range(4, 20), UnityEngine.Random.Range(4, 20)), NetObjType.SpacePlane);
+    }
+
+    void SpawnLocalNetObj(GameObject prefab, Vector3 position, NetObjType type)
+    {
+        var go = Instantiate(prefab, position, Quaternion.identity);
+        var netObjGene = go.GetComponent<NetObjGene>();
+        netObjGene.IsLocalPlayer = true;
+        netObjGene.OfflineMode = false;
+        netObjGene.NetObj = new NetObj { Id = Guid.NewGuid(), GameClientId = GameClient.Instance.Id, Type = type };
+
+        GameClient.Instance.SendNetObjCreate(netObjGene.NetObj);
     }
 
     void OnPositionUpdated(PositionUpdate update)
@@ -92,42 +91,45 @@ public class PlayerProcessor : MonoBehaviour
 
     void OnNewPlayer(Guid newPlayerGuid)
     {
+        Debug.Log("New player! " + newPlayerGuid);
     }
 
     void OnNewNetObj(NetObj newNetObj)
     {
+        Debug.Log("New net obj! " + newNetObj.GameClientId + ": " + newNetObj.Id);
         InstantiateOtherNetObj(newNetObj);
     }
 
     void InstantiateOtherNetObj(NetObj otherNetObj)
     {
-        GameObject prefab;
-
-        switch (otherNetObj.Type)
-        {
-            case NetObjType.Player:
-                prefab = PlayerPrefab;
-                break;
-            case NetObjType.Zombie:
-                prefab = ZombiePrefab;
-                break;
-            case NetObjType.SpacePlane:
-                prefab = SpacePlanePrefab;
-                break;
-            default: throw new Exception("bad netobj type");
-        }
-
+        GameObject prefab = GetPrefabFromNetObjType(otherNetObj.Type);
         var go = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+
         var netObjGene = go.GetComponent<NetObjGene>();
         netObjGene.NetObj = otherNetObj;
         netObjGene.IsLocalPlayer = false;
         netObjGene.OfflineMode = true;
+
         var camera = go.GetComponentInChildren<Camera>();
         if (camera != null) camera.enabled = false;
+
         var listener = go.GetComponentInChildren<AudioListener>();
         if (listener != null) listener.enabled = false;
+
         go.GetComponentInChildren<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        
         _otherNetObjs[otherNetObj.Id] = netObjGene;
+    }
+
+    GameObject GetPrefabFromNetObjType(NetObjType netObjType)
+    {
+        switch (netObjType)
+        {
+            case NetObjType.Player: return PlayerPrefab;
+            case NetObjType.Zombie: return ZombiePrefab;
+            case NetObjType.SpacePlane: return SpacePlanePrefab;
+            default: throw new Exception("bad netobj type: " + netObjType);
+        }
     }
 
     void OnPlayerDisconnect(Guid disconnectedPlayerGuid)

@@ -136,6 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b47abd664ff5d6439863421e5faf261, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameServerLocation: 1
 --- !u!4 &667981840
 Transform:
   m_ObjectHideFlags: 0
@@ -167,7 +168,7 @@ MonoBehaviour:
   SpacePlanePrefab: {fileID: 1388423791930566, guid: 119a6b32caaa295449625dc9bf9b3b22,
     type: 2}
   PlayerSpawnPosition: {fileID: 1505042452}
-  isPlayer: 0
+  isPlayer: 1
 --- !u!1001 &1505042451
 Prefab:
   m_ObjectHideFlags: 0
