@@ -30,7 +30,7 @@ public class GameClient : MonoBehaviour
     public event Action<NetObj> NewNetObj;
     public event Action<Guid> NetObjDestroyed;
 
-	UdpClient _client = new UdpClient();
+    UdpClient _udpClient;
 	ConcurrentQueue<string> _inboundMessageQueue = new ConcurrentQueue<string>();
 
     int _messagesSentInLastSecond = 0;
@@ -43,6 +43,7 @@ public class GameClient : MonoBehaviour
     {
         Instance = this;
         SetupServerInfo();
+        _udpClient = new UdpClient(_serverHostName, _serverPort);
     }
 
     void SetupServerInfo()
@@ -58,6 +59,7 @@ public class GameClient : MonoBehaviour
                 _serverPort = 20547;
                 break;
         }
+
         Debug.Log("Game server location set to " + _serverHostName + ":" + _serverPort);
     }
 
@@ -108,24 +110,33 @@ public class GameClient : MonoBehaviour
 
 	void Update()
 	{
-		while (_inboundMessageQueue.Count > 0)
-		{
+        HandleInboundMessages();
+	}
+
+    void HandleInboundMessages()
+    {
+        while (_inboundMessageQueue.Count > 0)
+        {
             string result;
             _inboundMessageQueue.TryDequeue(out result);
-			var message = JsonConvert.DeserializeObject<UdpMessage>(result);
+            var message = JsonConvert.DeserializeObject<UdpMessage>(result);
+            HandleInboundMessage(message);
+        }
+    }
 
-			switch (message.Event)
-			{
-                case "connected": Connected?.Invoke(); break;
-                case "position": PositionUpdate?.Invoke(Deserialize<PositionUpdate>(message.Data.ToString())); break;
-                case "newplayer": NewPlayer?.Invoke(new Guid(message.Data.ToString())); break;
-                case "playerdisconnected": PlayerDisconnected?.Invoke(new Guid(message.Data.ToString())); break;
-                case "newnetobj": NewNetObj?.Invoke(Deserialize<NetObj>(message.Data.ToString())); break;
-                case "destroynetobj": NetObjDestroyed?.Invoke(new Guid(message.Data.ToString())); break;
-				default: break;
-			}
-		}
-	}
+    void HandleInboundMessage(UdpMessage message)
+    {
+        switch (message.Event)
+        {
+            case "connected": Connected?.Invoke(); break;
+            case "position": PositionUpdate?.Invoke(Deserialize<PositionUpdate>(message.Data.ToString())); break;
+            case "newplayer": NewPlayer?.Invoke(new Guid(message.Data.ToString())); break;
+            case "playerdisconnected": PlayerDisconnected?.Invoke(new Guid(message.Data.ToString())); break;
+            case "newnetobj": NewNetObj?.Invoke(Deserialize<NetObj>(message.Data.ToString())); break;
+            case "destroynetobj": NetObjDestroyed?.Invoke(new Guid(message.Data.ToString())); break;
+            default: Debug.LogError("Received invalid inbound message event: " + message.Event); break;
+        }
+    }
 
     T Deserialize<T>(string json)
     {
@@ -137,7 +148,7 @@ public class GameClient : MonoBehaviour
 
 	async Task<string> ReceiveAsync()
 	{
-        var receiveResult = await _client.ReceiveAsync();
+        var receiveResult = await _udpClient.ReceiveAsync();
         var receivedMsg = Encoding.UTF8.GetString(receiveResult.Buffer);
         MyLogger.LogTrace("received: " + receivedMsg);
         return receivedMsg;
@@ -154,7 +165,7 @@ public class GameClient : MonoBehaviour
         var json = JsonConvert.SerializeObject(message);
         var jsonBytes = Encoding.UTF8.GetBytes(json);
 
-        _client.SendAsync(jsonBytes, jsonBytes.Length, _serverHostName, _serverPort);
+        _udpClient.SendAsync(jsonBytes, jsonBytes.Length);
 
         MyLogger.LogTrace("msg sent: " + message);
         _messagesSentInLastSecond++;
