@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using AlpacaCommon;
+using GameServerNet.GameServer;
 using GameServerNet.HttpApi;
 using Microsoft.AspNetCore.Hosting;
 
@@ -9,14 +10,14 @@ namespace GameServerNet
 {
     class Program
     {
-        static UdpServer _udpServer;
+        static SmartGameServer _smartGameServer;
 
         static void Main(string[] args)
         {
             Console.WriteLine(nameof(Main));
 
-            _udpServer = new UdpServer();
-            _udpServer.Start();
+            _smartGameServer = new SmartGameServer();
+            _smartGameServer.Start();
 
             HttpApiStarter.StartHttpApiAsync().Wait();
         }

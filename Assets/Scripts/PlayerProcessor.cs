@@ -18,12 +18,12 @@ public class PlayerProcessor : MonoBehaviour
 
 	void Start()
     {
-        GameClient.Instance.Connected += OnConnected;
-        GameClient.Instance.PositionUpdate += OnPositionUpdated;
-        GameClient.Instance.NewPlayer += OnNewPlayer;
-        GameClient.Instance.PlayerDisconnected += OnPlayerDisconnect;
-        GameClient.Instance.NewNetObj += OnNewNetObj;
-        GameClient.Instance.NetObjDestroyed += OnNetObjDestroyed;
+        GameClient.I.Connected += OnConnected;
+        GameClient.I.PositionUpdate += OnPositionUpdated;
+        GameClient.I.NewPlayer += OnNewPlayer;
+        GameClient.I.PlayerDisconnected += OnPlayerDisconnect;
+        GameClient.I.NewNetObj += OnNewNetObj;
+        GameClient.I.NetObjDestroyed += OnNetObjDestroyed;
 	}
 
     void OnNetObjDestroyed(Guid destroyedNetObjGuid)
@@ -78,9 +78,9 @@ public class PlayerProcessor : MonoBehaviour
         var netObjGene = go.GetComponent<NetObjGene>();
         netObjGene.IsLocalPlayer = true;
         netObjGene.OfflineMode = false;
-        netObjGene.NetObj = new NetObj { Id = Guid.NewGuid(), GameClientId = GameClient.Instance.Id, Type = type };
+        netObjGene.NetObj = new NetObj { Id = Guid.NewGuid(), GameClientId = GameClient.I.Id, Type = type };
 
-        GameClient.Instance.SendNetObjCreate(netObjGene.NetObj);
+        GameClient.I.SendNetObjCreate(netObjGene.NetObj);
     }
 
     void OnPositionUpdated(PositionUpdate update)

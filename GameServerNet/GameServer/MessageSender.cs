@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using AlpacaCommon;
 using BundtCommon;
+using GameServerNet.GameServer;
 using Newtonsoft.Json;
 
 namespace GameServerNet
@@ -37,7 +38,7 @@ namespace GameServerNet
         {
             SendMessageToClient(client.IPEndPoint, new UdpMessage("connected"));
 
-            foreach (var item in UdpServer._netObjects.Values)
+            foreach (var item in SmartGameServer._netObjects.Values)
             {
                 SendNewNetObjToClient(item, client.IPEndPoint);
             }
@@ -75,7 +76,7 @@ namespace GameServerNet
 
         void SendMessageToOtherClients(UdpMessage message, GameClient ignoredClient)
         {
-            foreach (var client in UdpServer._connectedClients.Clients)
+            foreach (var client in SmartGameServer._connectedClients.Clients)
             {
                 if (client == ignoredClient) continue;
                 SendMessageToClient(message, client.IPEndPoint);
@@ -84,7 +85,7 @@ namespace GameServerNet
 
         void SendMessageToAllClients(UdpMessage message)
         {
-            foreach (var client in UdpServer._connectedClients.Clients)
+            foreach (var client in SmartGameServer._connectedClients.Clients)
             {
                 SendMessageToClient(message, client.IPEndPoint);
             }

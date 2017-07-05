@@ -38,20 +38,7 @@ public class NetObjGene : MonoBehaviour
 
     void SendPosition()
     {
-        var positionMessage = new UdpMessage("position")
-        {
-            Data = new PositionUpdate
-            {
-                Id = NetObj.Id,
-                X = transform.position.x,
-                Y = transform.position.y,
-                Z = transform.position.z,
-                RotX = transform.rotation.eulerAngles.x,
-                RotY = transform.rotation.eulerAngles.y,
-                RotZ = transform.rotation.eulerAngles.z,
-            }
-        };
-        GameClient.Instance.SendMessageToServer(positionMessage);
+        GameClient.I.SendPosition(NetObj.Id, transform);
         _positionLastSentTime = DateTime.Now;
     }
 }

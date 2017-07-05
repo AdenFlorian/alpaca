@@ -1,26 +1,31 @@
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 using AlpacaCommon;
 using BundtCommon;
+using GameServerNet.GameServer;
 using Newtonsoft.Json;
 
 namespace GameServerNet
 {
     class UdpServer
     {
-        public static ConnectedClients _connectedClients = new ConnectedClients();
-        public static ConcurrentDictionary<Guid, NetObj> _netObjects = new ConcurrentDictionary<Guid, NetObj>();
+        // Connected client events
+        public event Action<GameClient, NetObj> NetObjCreated;
+        public event Action<ReceivedClientMessage> PositionUpdated;
+        public event Action OwnershipRequested;
+        public event Action<ReceivedClientMessage> BadConnectedClientMessage;
+        
+        // Unkown client events
+        public event Action<ReceivedMessage> NatPunch;
+        public event Action<ReceivedMessage> Connect;
+        public event Action<ReceivedMessage> BadUnkownClientMessage;
+
+        public MessageSender MessageSender;
 
         UdpClient _udpClient;
         MessageReceiver _messageReceiver;
-        MessageSender _messageSender;
-
         MyLogger _logger = new MyLogger(nameof(UdpServer));
 
         public UdpServer()
@@ -29,46 +34,19 @@ namespace GameServerNet
             _udpClient = new UdpClient(ipEndPoint);
             _messageReceiver = new MessageReceiver(_udpClient);
             _messageReceiver.MessageReceived += OnMessageReceived;
-            _messageSender = new MessageSender(_udpClient);
+            MessageSender = new MessageSender(_udpClient);
         }
 
         public void Start()
         {
             _messageReceiver.StartReceiving();
-            StartClientActivityMonitor();
-        }
-
-        void StartClientActivityMonitor()
-        {
-            Task.Run(async () =>
-            {
-                while (true)
-                {
-                    try
-                    {
-                        await Task.Delay(2000);
-                        foreach (var client in _connectedClients.Clients)
-                        {
-                            if (client.LastActivity < (DateTime.Now - TimeSpan.FromSeconds(5)))
-                            {
-                                KickClient(client);
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex);
-                    }
-                }
-            });
         }
 
         void OnMessageReceived(UdpReceiveResult result)
         {
-            var resultString = Encoding.UTF8.GetString(result.Buffer);
-            var udpMessage = JsonConvert.DeserializeObject<UdpMessage>(resultString);
+            var udpMessage = ExtractUdpMessage(result);
             var receivedMessage = new ReceivedMessage(result, udpMessage);
-            var matchedClient = _connectedClients.GetByIPEndpoint(receivedMessage.Result.RemoteEndPoint);
+            var matchedClient = SmartGameServer._connectedClients.GetByIPEndpoint(receivedMessage.Result.RemoteEndPoint);
 
             if (matchedClient != null)
             {
@@ -80,25 +58,33 @@ namespace GameServerNet
             }
         }
 
+        static UdpMessage ExtractUdpMessage(UdpReceiveResult result)
+        {
+            try
+            {
+                var resultString = Encoding.UTF8.GetString(result.Buffer);
+                return JsonConvert.DeserializeObject<UdpMessage>(resultString);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to extract a UdpMessage, client probably sent a bad message", ex);
+            }
+        }
+
         void ProcessConectedClientMessage(ReceivedClientMessage message)
         {
             message.Client.RefreshLastActivity();
 
             switch (message.Message.Message.Event)
             {
-                case "position":
-                    _messageSender.SendPositionToOtherClients(message);
-                    break;
+                case "position":  PositionUpdated?.Invoke(message); break;
                 case "netobjcreate":
                     var newNetObj = JsonConvert.DeserializeObject<NetObj>(message.Message.Message.Data.ToString());
                     _logger.LogInfo("netobjcreate: " + message.Message.Message.Data.ToString());
-                    _netObjects[newNetObj.Id] = newNetObj;
-                    _messageSender.SendNewNetObjToOtherClients(message.Client, newNetObj);
+                    NetObjCreated?.Invoke(message.Client, newNetObj);
                     break;
-                default:
-                    _logger.LogInfo("client sent bad message: " + message.Client.Id);
-                    _messageSender.SendBadMessage(message.Client.IPEndPoint);
-                    break;
+                case "request-ownership": OwnershipRequested?.Invoke(); break;
+                default: BadConnectedClientMessage?.Invoke(message); break;
             }
         }
 
@@ -106,47 +92,10 @@ namespace GameServerNet
         {
             switch (message.Message.Event)
             {
-                case "natpunch":
-                    _logger.LogInfo("natpunch requested from " + message.Result.RemoteEndPoint);
-                    _messageSender.SendNatPunch(message);
-                    break;
-                case "connect":
-                    _logger.LogInfo("client request to connect from " + message.Result.RemoteEndPoint);
-                    OnConnectRequest(message);
-                    break;
-                default:
-                    _logger.LogInfo("client sent bad message from " + message.Result.RemoteEndPoint);
-                    _messageSender.SendBadMessage(message.Result.RemoteEndPoint);
-                    break;
+                case "natpunch": NatPunch?.Invoke(message); break;
+                case "connect": Connect?.Invoke(message); break;
+                default: BadUnkownClientMessage?.Invoke(message); break;
             }
-        }
-
-        void OnConnectRequest(ReceivedMessage message)
-        {
-            var netId = new Guid(message.Message.Data.ToString());
-            var gameClient = new GameClient(netId, message.Result.RemoteEndPoint);
-
-            _connectedClients.AddOrUpdateByGuid(netId, gameClient);
-
-            _messageSender.SendConnected(gameClient);
-            _messageSender.SendNewPlayerToOtherClients(gameClient);
-            _logger.LogInfo("Client connected: " + gameClient.Id);
-        }
-
-        public void KickClient(GameClient clientToKick)
-        {
-            _connectedClients.KickClient(clientToKick);
-            foreach (var netObj in _netObjects.Values.Where(x => x.GameClientId == clientToKick.Id))
-            {
-                _messageSender.SendDestroyNetObjToOtherClients(clientToKick, netObj.Id);
-            }
-            NetObj removedNetObj = null;
-            _netObjects.Where(x => x.Value.GameClientId == clientToKick.Id).ToList().ForEach(x => _netObjects.Remove(x.Key, out removedNetObj));
-            if (removedNetObj == null)
-            {
-                throw new Exception("Failed to remove netobj");
-            }
-            _messageSender.SendPlayerDisconnectedToAllClients(clientToKick);
         }
     }
 }

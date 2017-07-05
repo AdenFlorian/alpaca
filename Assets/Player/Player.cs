@@ -107,6 +107,8 @@ public class Player : MonoBehaviour
 
     public void GetInPlane(SpacePlane spacePlane)
     {
+        GameClient.I.SendOwnershipRequest(spacePlane.NetObjGene.NetObj.Id);
+
         _rigidbody.isKinematic = true;
         transform.position = spacePlane.transform.position;
         _disableInput = true;
@@ -116,5 +118,6 @@ public class Player : MonoBehaviour
         {
             Collider.gameObject.SetActive(false);
         }
+        spacePlane.NetObjGene.IsLocalPlayer = true;
     }
 }

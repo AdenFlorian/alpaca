@@ -17,7 +17,7 @@ public enum GameServerLocation
 
 public class GameClient : MonoBehaviour
 {
-    public static GameClient Instance;
+    public static GameClient I;
 
     public GameServerLocation GameServerLocation;
 
@@ -41,7 +41,7 @@ public class GameClient : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
+        I = this;
         SetupServerInfo();
         _udpClient = new UdpClient(_serverHostName, _serverPort);
     }
@@ -160,7 +160,27 @@ public class GameClient : MonoBehaviour
 
     public void SendNetObjCreate(NetObj newNetObj) => SendMessageToServer(new UdpMessage("netobjcreate", newNetObj));
 
-	public void SendMessageToServer(object message)
+    public void SendPosition(Guid netObjId, Transform transformToSend)
+    {
+        var positionMessage = new UdpMessage("position")
+        {
+            Data = new PositionUpdate
+            {
+                Id = netObjId,
+                X = transformToSend.position.x,
+                Y = transformToSend.position.y,
+                Z = transformToSend.position.z,
+                RotX = transformToSend.rotation.eulerAngles.x,
+                RotY = transformToSend.rotation.eulerAngles.y,
+                RotZ = transformToSend.rotation.eulerAngles.z,
+            }
+        };
+        SendMessageToServer(positionMessage);
+    }
+
+    public void SendOwnershipRequest(Guid netObjIdToRequest) => SendMessageToServer(new UdpMessage("request-ownership", netObjIdToRequest));
+
+	void SendMessageToServer(object message)
 	{
         var json = JsonConvert.SerializeObject(message);
         var jsonBytes = Encoding.UTF8.GetBytes(json);
