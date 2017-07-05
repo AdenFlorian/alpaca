@@ -11,12 +11,17 @@ public class Player : MonoBehaviour
     public float gravity;
     public float JumpForce;
 
+    public Collider[] Colliders;
+
     public Camera Camera;
     public NetObjGene NetObjGene;
 
     Rigidbody _rigidbody;
 
     float localYRotation;
+    bool _disableInput;
+    bool _inPlane = true;
+    SpacePlane MyPlane;
 
 	void Start()
 	{
@@ -41,7 +46,7 @@ public class Player : MonoBehaviour
                 Cursor.visible = false;
             }
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && _disableInput == false)
             {
                 _rigidbody.AddForce(transform.up * JumpForce, ForceMode.Impulse);
             }
@@ -53,6 +58,14 @@ public class Player : MonoBehaviour
             transform.eulerAngles += new Vector3(90, 0, 0);
             
             transform.Rotate(Vector3.up, localYRotation, Space.Self);
+
+            if (_inPlane && MyPlane != null)
+            {
+                transform.position = MyPlane.transform.position;
+                transform.rotation = MyPlane.transform.rotation;
+                Camera.transform.position = MyPlane.CameraRig.position;
+                Camera.transform.rotation = MyPlane.CameraRig.rotation;
+            }
         }
 	}
 
@@ -60,31 +73,48 @@ public class Player : MonoBehaviour
     {
         if (NetObjGene.IsLocalPlayer)
         {
-            var fromMeToOrigin = (Vector3.zero - transform.position).normalized;
 
-            var moveVector = new Vector3();
+            if (_disableInput == false)
+            {
+                var fromMeToOrigin = (Vector3.zero - transform.position).normalized;
 
-            if (Input.GetKey(KeyCode.W))
-            {
-                moveVector += transform.forward * Speed;
-            }
-            if (Input.GetKey(KeyCode.S))
-            {
-                moveVector += -transform.forward * Speed;
-            }
-            if (Input.GetKey(KeyCode.A))
-            {
-                moveVector += -transform.right * Speed;
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                moveVector += transform.right * Speed;
-            }
+                var moveVector = new Vector3();
 
-            var moveForce = moveVector * Time.fixedDeltaTime;
-            var gravityForce = fromMeToOrigin * gravity * Time.fixedDeltaTime;
+                if (Input.GetKey(KeyCode.W))
+                {
+                    moveVector += transform.forward * Speed;
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    moveVector += -transform.forward * Speed;
+                }
+                if (Input.GetKey(KeyCode.A))
+                {
+                    moveVector += -transform.right * Speed;
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    moveVector += transform.right * Speed;
+                }
 
-            _rigidbody.AddForce(moveForce + gravityForce, ForceMode.VelocityChange);
+                var moveForce = moveVector * Time.fixedDeltaTime;
+                var gravityForce = fromMeToOrigin * gravity * Time.fixedDeltaTime;
+
+                _rigidbody.AddForce(moveForce + gravityForce, ForceMode.VelocityChange);
+            }
+        }
+    }
+
+    public void GetInPlane(SpacePlane spacePlane)
+    {
+        _rigidbody.isKinematic = true;
+        transform.position = spacePlane.transform.position;
+        _disableInput = true;
+        _inPlane = true;
+        MyPlane = spacePlane;
+        foreach (var Collider in Colliders)
+        {
+            Collider.gameObject.SetActive(false);
         }
     }
 }

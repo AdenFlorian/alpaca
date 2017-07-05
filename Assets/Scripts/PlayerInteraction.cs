@@ -2,15 +2,63 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInteraction : MonoBehaviour {
+public class PlayerInteraction : MonoBehaviour
+{
+	[Range(0, 100)]
+	public float MaxInteractionDistance;
+	public Transform RayOrigin;
+	public Player Player;
 
-	// Use this for initialization
-	void Start () {
+	SpacePlane HighlightedSpacePlane;
+
+	void Awake()
+	{
+		if (Player.NetObjGene.IsLocalPlayer == false)
+		{
+			gameObject.SetActive(false);
+		}
+	}
+
+	void Start()
+	{
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+	void Update()
+	{
+        MyLogger.LogInfo("casting ray...");
+		Ray ray = new Ray(RayOrigin.position, RayOrigin.forward * MaxInteractionDistance);
+
+		Debug.DrawRay(ray.origin, ray.direction * MaxInteractionDistance, Color.red, 0.5f);
+
+		RaycastHit hitInfo;
+		var hitSomething = Physics.Raycast(ray, out hitInfo, MaxInteractionDistance);
+		if (hitSomething)
+		{
+			OnHitSomething(hitInfo);
+		}
+
+		if (Input.GetKeyDown(KeyCode.F) && HighlightedSpacePlane != null)
+		{
+			Player.GetInPlane(HighlightedSpacePlane);
+		}
+	}
+
+	void OnHitSomething(RaycastHit hitInfo)
+	{
+        MyLogger.LogInfo("Hit something...");
+		var spacePlane = hitInfo.collider.GetComponentInParent<SpacePlane>();
+		if (spacePlane != null)
+		{
+			OnHitSpacePlane(spacePlane);
+		}
+	}
+
+	void OnHitSpacePlane(SpacePlane spacePlane)
+	{
+		spacePlane.OnPointedAt();
+		HighlightedSpacePlane = spacePlane;
+		MyLogger.LogInfo("Hit spaceplane!");
+		spacePlane._disableInput = false;
 	}
 }
