@@ -86,7 +86,7 @@ public class PlayerProcessor : MonoBehaviour
 
     void SpawnLocalSpacePlane()
     {
-        SpawnLocalNetObj(SpacePlanePrefab, PlayerSpawnPosition.position + new Vector3(UnityEngine.Random.Range(6, 60), UnityEngine.Random.Range(4, 20), UnityEngine.Random.Range(4, 20)), NetObjType.SpacePlane);
+        SpawnLocalNetObj(SpacePlanePrefab, PlayerSpawnPosition.position + new Vector3(UnityEngine.Random.Range(6, 100), UnityEngine.Random.Range(4, 100), UnityEngine.Random.Range(4, 100)), NetObjType.SpacePlane);
     }
 
     void SpawnLocalNetObj(GameObject prefab, Vector3 position, NetObjType type)

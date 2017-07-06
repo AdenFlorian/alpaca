@@ -43,17 +43,9 @@ public class SpacePlane : MonoBehaviour
                 {
                     moveVector += -transform.forward * Speed;
                 }
-                // if (Input.GetKey(KeyCode.A))
-                // {
-                //     moveVector += -transform.right * Speed;
-                // }
-                // if (Input.GetKey(KeyCode.D))
-                // {
-                //     moveVector += transform.right * Speed;
-                // }
                 if (Input.GetKey(KeyCode.Space))
                 {
-                    moveVector += transform.up * Speed / 2;
+                    moveVector += transform.up * Speed / 1.5f;
                 }
                 if (Input.GetKey(KeyCode.A))
                 {
