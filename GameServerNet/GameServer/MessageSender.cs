@@ -74,6 +74,11 @@ namespace GameServerNet
             SendMessageToOtherClients(new UdpMessage("destroynetobj", destroyedNetObjGuid), client);
         }
 
+        internal void SendOwnerChangedToOtherClients(GameClient client, Guid netObjGuidWhoseOwnerChanged)
+        {
+            SendMessageToOtherClients(new UdpMessage("owner-changed", netObjGuidWhoseOwnerChanged), client);
+        }
+
         void SendMessageToOtherClients(UdpMessage message, GameClient ignoredClient)
         {
             foreach (var client in SmartGameServer._connectedClients.Clients)

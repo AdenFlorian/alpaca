@@ -90,9 +90,11 @@ namespace GameServerNet.GameServer
             _logger.LogInfo("Client connected: " + gameClient.Id);
         }
 
-        void OnOwnershipRequested()
+        void OnOwnershipRequested(GameClient requestor, Guid thingToOwn)
         {
-
+            _logger.LogInfo("owner changed (netobj: " + thingToOwn + ", new owner: " + requestor.Id);
+            _netObjects[thingToOwn].GameClientId = requestor.Id;
+            _udpServer.MessageSender.SendOwnerChangedToOtherClients(requestor, thingToOwn);
         }
 
         void OnBadConnectedClientMessage(ReceivedClientMessage message)

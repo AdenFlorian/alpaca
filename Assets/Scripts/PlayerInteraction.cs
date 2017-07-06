@@ -13,23 +13,21 @@ public class PlayerInteraction : MonoBehaviour
 
 	void Awake()
 	{
-		if (Player.NetObjGene.IsLocalPlayer == false)
-		{
-			gameObject.SetActive(false);
-		}
 	}
 
 	void Start()
 	{
-		
+        if (Player.NetObjGene.IsLocalPlayer == false)
+        {
+            this.enabled = false;
+        }
 	}
 
 	void Update()
 	{
-        MyLogger.LogInfo("casting ray...");
 		Ray ray = new Ray(RayOrigin.position, RayOrigin.forward * MaxInteractionDistance);
 
-		Debug.DrawRay(ray.origin, ray.direction * MaxInteractionDistance, Color.red, 0.5f);
+		//Debug.DrawRay(ray.origin, ray.direction * MaxInteractionDistance, Color.red, 0.5f);
 
 		RaycastHit hitInfo;
 		var hitSomething = Physics.Raycast(ray, out hitInfo, MaxInteractionDistance);
@@ -46,7 +44,7 @@ public class PlayerInteraction : MonoBehaviour
 
 	void OnHitSomething(RaycastHit hitInfo)
 	{
-        MyLogger.LogInfo("Hit something...");
+        //MyLogger.LogInfo("Hit something...");
 		var spacePlane = hitInfo.collider.GetComponentInParent<SpacePlane>();
 		if (spacePlane != null)
 		{
@@ -58,7 +56,7 @@ public class PlayerInteraction : MonoBehaviour
 	{
 		spacePlane.OnPointedAt();
 		HighlightedSpacePlane = spacePlane;
-		MyLogger.LogInfo("Hit spaceplane!");
+		//MyLogger.LogInfo("Hit spaceplane!");
 		spacePlane._disableInput = false;
 	}
 }

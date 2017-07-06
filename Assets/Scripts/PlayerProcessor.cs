@@ -13,6 +13,7 @@ public class PlayerProcessor : MonoBehaviour
     public Transform PlayerSpawnPosition;
 
     Dictionary<Guid, NetObjGene> _otherNetObjs = new Dictionary<Guid, NetObjGene>();
+    Dictionary<Guid, NetObjGene> _localNetObjs = new Dictionary<Guid, NetObjGene>();
 
     public bool isPlayer = false;
 
@@ -24,7 +25,20 @@ public class PlayerProcessor : MonoBehaviour
         GameClient.I.PlayerDisconnected += OnPlayerDisconnect;
         GameClient.I.NewNetObj += OnNewNetObj;
         GameClient.I.NetObjDestroyed += OnNetObjDestroyed;
+        GameClient.I.OwnerChanged += OnOwnerChanged;
 	}
+
+    void OnOwnerChanged(Guid netObjId)
+    {
+        if (_localNetObjs.ContainsKey(netObjId))
+        {
+            MyLogger.LogInfo("owner changed: netobj: " + netObjId);
+            _localNetObjs[netObjId].IsLocalPlayer = false;
+            _localNetObjs[netObjId].GetComponent<Rigidbody>().isKinematic = true;
+            _otherNetObjs.Add(netObjId, _localNetObjs[netObjId]);
+            _localNetObjs.Remove(netObjId);
+        }
+    }
 
     void OnNetObjDestroyed(Guid destroyedNetObjGuid)
     {
@@ -53,7 +67,10 @@ public class PlayerProcessor : MonoBehaviour
                 SpawnLocalZombie();
             }
 
-            SpawnLocalSpacePlane();
+            for (int i = 0; i < 10; i++)
+            {
+                SpawnLocalSpacePlane();
+            }
         }
     }
 
@@ -69,7 +86,7 @@ public class PlayerProcessor : MonoBehaviour
 
     void SpawnLocalSpacePlane()
     {
-        SpawnLocalNetObj(SpacePlanePrefab, PlayerSpawnPosition.position + new Vector3(UnityEngine.Random.Range(6, 30), UnityEngine.Random.Range(4, 20), UnityEngine.Random.Range(4, 20)), NetObjType.SpacePlane);
+        SpawnLocalNetObj(SpacePlanePrefab, PlayerSpawnPosition.position + new Vector3(UnityEngine.Random.Range(6, 60), UnityEngine.Random.Range(4, 20), UnityEngine.Random.Range(4, 20)), NetObjType.SpacePlane);
     }
 
     void SpawnLocalNetObj(GameObject prefab, Vector3 position, NetObjType type)
@@ -80,13 +97,13 @@ public class PlayerProcessor : MonoBehaviour
         netObjGene.OfflineMode = false;
         netObjGene.NetObj = new NetObj { Id = Guid.NewGuid(), GameClientId = GameClient.I.Id, Type = type };
 
+        _localNetObjs[netObjGene.NetObj.Id] = netObjGene;
         GameClient.I.SendNetObjCreate(netObjGene.NetObj);
     }
 
     void OnPositionUpdated(PositionUpdate update)
     {
-        _otherNetObjs[update.Id].transform.position = new Vector3(update.X, update.Y, update.Z);
-        _otherNetObjs[update.Id].transform.rotation = Quaternion.Euler(new Vector3(update.RotX, update.RotY, update.RotZ));
+        _otherNetObjs[update.Id].OnPositionUpdatedFromNetwork(update);
     }
 
     void OnNewPlayer(Guid newPlayerGuid)
@@ -108,7 +125,7 @@ public class PlayerProcessor : MonoBehaviour
         var netObjGene = go.GetComponent<NetObjGene>();
         netObjGene.NetObj = otherNetObj;
         netObjGene.IsLocalPlayer = false;
-        netObjGene.OfflineMode = true;
+        netObjGene.OfflineMode = false;
 
         var camera = go.GetComponentInChildren<Camera>();
         if (camera != null) camera.enabled = false;
@@ -116,7 +133,7 @@ public class PlayerProcessor : MonoBehaviour
         var listener = go.GetComponentInChildren<AudioListener>();
         if (listener != null) listener.enabled = false;
 
-        go.GetComponentInChildren<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        go.GetComponentInChildren<Rigidbody>().isKinematic = true;
         
         _otherNetObjs[otherNetObj.Id] = netObjGene;
     }

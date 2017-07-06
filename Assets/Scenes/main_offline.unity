@@ -108,7 +108,7 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &525464149
+--- !u!1001 &599094928
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -213,19 +213,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4230193993609190, guid: 119a6b32caaa295449625dc9bf9b3b22, type: 2}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0.008548917
       objectReference: {fileID: 0}
     - target: {fileID: 4230193993609190, guid: 119a6b32caaa295449625dc9bf9b3b22, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.9188079
       objectReference: {fileID: 0}
     - target: {fileID: 4230193993609190, guid: 119a6b32caaa295449625dc9bf9b3b22, type: 2}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.15692337
       objectReference: {fileID: 0}
     - target: {fileID: 4230193993609190, guid: 119a6b32caaa295449625dc9bf9b3b22, type: 2}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.36206916
       objectReference: {fileID: 0}
     - target: {fileID: 4230193993609190, guid: 119a6b32caaa295449625dc9bf9b3b22, type: 2}
       propertyPath: m_RootOrder

@@ -119,5 +119,7 @@ public class Player : MonoBehaviour
             Collider.gameObject.SetActive(false);
         }
         spacePlane.NetObjGene.IsLocalPlayer = true;
+        spacePlane.GetComponent<Rigidbody>().isKinematic = false;
+        Camera.GetComponent<CameraVerticalLook>().enabled = false;
     }
 }

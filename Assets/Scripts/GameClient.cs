@@ -29,6 +29,7 @@ public class GameClient : MonoBehaviour
     public event Action<Guid> PlayerDisconnected;
     public event Action<NetObj> NewNetObj;
     public event Action<Guid> NetObjDestroyed;
+    public event Action<Guid> OwnerChanged;
 
     UdpClient _udpClient;
 	ConcurrentQueue<string> _inboundMessageQueue = new ConcurrentQueue<string>();
@@ -97,7 +98,6 @@ public class GameClient : MonoBehaviour
                 try
                 {
                     var message = await ReceiveAsync();
-                    MyLogger.LogTrace(message);
                     _inboundMessageQueue.Enqueue(message);
                 }
                 catch (Exception ex)
@@ -134,6 +134,7 @@ public class GameClient : MonoBehaviour
             case "playerdisconnected": PlayerDisconnected?.Invoke(new Guid(message.Data.ToString())); break;
             case "newnetobj": NewNetObj?.Invoke(Deserialize<NetObj>(message.Data.ToString())); break;
             case "destroynetobj": NetObjDestroyed?.Invoke(new Guid(message.Data.ToString())); break;
+            case "owner-changed": OwnerChanged?.Invoke(new Guid(message.Data.ToString())); break;
             default: Debug.LogError("Received invalid inbound message event: " + message.Event); break;
         }
     }
@@ -187,7 +188,7 @@ public class GameClient : MonoBehaviour
 
         _udpClient.SendAsync(jsonBytes, jsonBytes.Length);
 
-        MyLogger.LogTrace("msg sent: " + message);
+        MyLogger.LogTrace("msg sent: " + json);
         _messagesSentInLastSecond++;
 	}
 }

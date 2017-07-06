@@ -14,7 +14,7 @@ namespace GameServerNet
         // Connected client events
         public event Action<GameClient, NetObj> NetObjCreated;
         public event Action<ReceivedClientMessage> PositionUpdated;
-        public event Action OwnershipRequested;
+        public event Action<GameClient, Guid> OwnershipRequested;
         public event Action<ReceivedClientMessage> BadConnectedClientMessage;
         
         // Unkown client events
@@ -83,7 +83,7 @@ namespace GameServerNet
                     _logger.LogInfo("netobjcreate: " + message.Message.Message.Data.ToString());
                     NetObjCreated?.Invoke(message.Client, newNetObj);
                     break;
-                case "request-ownership": OwnershipRequested?.Invoke(); break;
+                case "request-ownership": OwnershipRequested?.Invoke(message.Client, new Guid(message.Message.Message.Data.ToString())); break;
                 default: BadConnectedClientMessage?.Invoke(message); break;
             }
         }

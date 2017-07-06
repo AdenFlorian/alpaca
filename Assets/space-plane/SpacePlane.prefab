@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 114423254814505872}
   - component: {fileID: 114773100610728192}
   - component: {fileID: 54692090452236658}
+  - component: {fileID: 82178399242981350}
   m_Layer: 0
   m_Name: SpacePlane
   m_TagString: Untagged
@@ -115,7 +116,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1388423791930566}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.008548917, y: -0.9188079, z: -0.15692337, w: 0.36206916}
   m_LocalPosition: {x: 3.8360653, y: 1272.83, z: 156.9672}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -123,7 +124,7 @@ Transform:
   - {fileID: 4787724778691466}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -17.131, y: -136.098, z: -5.881}
 --- !u!4 &4448549661065266
 Transform:
   m_ObjectHideFlags: 1
@@ -277,6 +278,92 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300008, guid: 6c7e945a56c116e4090e5d17d4399464, type: 3}
+--- !u!82 &82178399242981350
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1388423791930566}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 882ce21a76a16f14683d2210c50213eb, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.483
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 2
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: -4.8836126
+      outSlope: -4.8836126
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.3134846
+      value: 0.17408717
+      inSlope: -0.62931114
+      outSlope: -0.62931114
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!95 &95128301065561680
 Animator:
   serializedVersion: 3
@@ -308,7 +395,7 @@ MonoBehaviour:
   HighlightMesh: {fileID: 1042095915241062}
   NetObjGene: {fileID: 114423254814505872}
   CameraRig: {fileID: 4787724778691466}
-  Speed: 20
+  Speed: 22
   gravity: 9
   TorqueForce: 1000000
   _disableInput: 1

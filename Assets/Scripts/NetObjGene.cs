@@ -41,4 +41,17 @@ public class NetObjGene : MonoBehaviour
         GameClient.I.SendPosition(NetObj.Id, transform);
         _positionLastSentTime = DateTime.Now;
     }
+
+    public void OnPositionUpdatedFromNetwork(PositionUpdate update)
+    {
+        if (IsLocalPlayer)
+        {
+            MyLogger.LogWarning("Received position update from server for local player: " + update.Id);
+        }
+        else
+        {
+            transform.position = new Vector3(update.X, update.Y, update.Z);
+            transform.rotation = Quaternion.Euler(new Vector3(update.RotX, update.RotY, update.RotZ));
+        }
+    }
 }
