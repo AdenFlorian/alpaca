@@ -10,10 +10,10 @@ public class SpacePlane : MonoBehaviour
     public float Speed;
     public float gravity;
     public float TorqueForce;
+    public bool DisableInput = true;
 
     Rigidbody _rigidbody;
 
-    public bool _disableInput = true;
 
     void Start()
     {
@@ -33,7 +33,7 @@ public class SpacePlane : MonoBehaviour
 
             var moveVector = new Vector3();
 
-            if (_disableInput == false)
+            if (DisableInput == false)
             {
                 if (Input.GetKey(KeyCode.W))
                 {

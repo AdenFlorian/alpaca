@@ -643,8 +643,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1408847333529838}
-  m_LocalRotation: {x: -0, y: 0.99941707, z: -0, w: 0.03413936}
-  m_LocalPosition: {x: -12.78, y: 1262.8, z: 175.21}
+  m_LocalRotation: {x: -0.025482919, y: 0.66506666, z: 0.74600327, w: 0.02271819}
+  m_LocalPosition: {x: -9.7, y: 1276.4, z: 129.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4185293820256538}
@@ -1233,9 +1233,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 727224542d742dc4ca6d40a4d71234f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 15
-  gravity: 9.42
+  Acceleration: 15
+  Gravity: 9.42
   JumpForce: 500
+  MaxMoveVelocity: 10
+  GroundedCheckRayLength: 0.5
   Colliders:
   - {fileID: 136611740641942984}
   - {fileID: 65740699083204548}

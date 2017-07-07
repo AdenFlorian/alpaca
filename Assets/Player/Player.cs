@@ -7,9 +7,11 @@ using Newtonsoft.Json;
 
 public class Player : MonoBehaviour
 {
-	public float Speed;
-    public float gravity;
+	public float Acceleration;
+    public float Gravity;
     public float JumpForce;
+    public float MaxMoveVelocity;
+    public float GroundedCheckRayLength;
 
     public Collider[] Colliders;
 
@@ -46,7 +48,7 @@ public class Player : MonoBehaviour
                 Cursor.visible = false;
             }
 
-            if (Input.GetKeyDown(KeyCode.Space) && _disableInput == false)
+            if (Input.GetKeyDown(KeyCode.Space) && _disableInput == false && IsGrounded())
             {
                 _rigidbody.AddForce(transform.up * JumpForce, ForceMode.Impulse);
             }
@@ -69,11 +71,15 @@ public class Player : MonoBehaviour
         }
 	}
 
+    bool IsGrounded()
+    {
+        return Physics.Raycast(transform.position, -transform.up, GroundedCheckRayLength);
+    }
+
     void FixedUpdate()
     {
         if (NetObjGene.IsLocalPlayer)
         {
-
             if (_disableInput == false)
             {
                 var fromMeToOrigin = (Vector3.zero - transform.position).normalized;
@@ -82,23 +88,29 @@ public class Player : MonoBehaviour
 
                 if (Input.GetKey(KeyCode.W))
                 {
-                    moveVector += transform.forward * Speed;
+                    moveVector += transform.forward * Acceleration;
                 }
                 if (Input.GetKey(KeyCode.S))
                 {
-                    moveVector += -transform.forward * Speed;
+                    moveVector += -transform.forward * Acceleration;
                 }
                 if (Input.GetKey(KeyCode.A))
                 {
-                    moveVector += -transform.right * Speed;
+                    moveVector += -transform.right * Acceleration;
                 }
                 if (Input.GetKey(KeyCode.D))
                 {
-                    moveVector += transform.right * Speed;
+                    moveVector += transform.right * Acceleration;
                 }
 
                 var moveForce = moveVector * Time.fixedDeltaTime;
-                var gravityForce = fromMeToOrigin * gravity * Time.fixedDeltaTime;
+
+                if (_rigidbody.velocity.magnitude > MaxMoveVelocity)
+                {
+                    moveForce *= 0;
+                }
+
+                var gravityForce = fromMeToOrigin * Gravity * Time.fixedDeltaTime;
 
                 _rigidbody.AddForce(moveForce + gravityForce, ForceMode.VelocityChange);
             }
@@ -107,7 +119,7 @@ public class Player : MonoBehaviour
 
     public void GetInPlane(SpacePlane spacePlane)
     {
-        GameClient.I.SendOwnershipRequest(spacePlane.NetObjGene.NetObj.Id);
+        GameClient.I?.SendOwnershipRequest(spacePlane.NetObjGene.NetObj.Id);
 
         _rigidbody.isKinematic = true;
         transform.position = spacePlane.transform.position;
@@ -119,6 +131,7 @@ public class Player : MonoBehaviour
             Collider.gameObject.SetActive(false);
         }
         spacePlane.NetObjGene.IsLocalPlayer = true;
+        spacePlane.DisableInput = false;
         spacePlane.GetComponent<Rigidbody>().isKinematic = false;
         Camera.GetComponent<CameraVerticalLook>().enabled = false;
     }

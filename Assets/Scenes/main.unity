@@ -213,7 +213,7 @@ MonoBehaviour:
   SpacePlanePrefab: {fileID: 1388423791930566, guid: 119a6b32caaa295449625dc9bf9b3b22,
     type: 2}
   PlayerSpawnPosition: {fileID: 1505042452}
-  isPlayer: 0
+  isPlayer: 1
 --- !u!1001 &1505042451
 Prefab:
   m_ObjectHideFlags: 0
@@ -252,11 +252,6 @@ Prefab:
     - target: {fileID: 4782289575267246, guid: 5bf4cc814e546d2479f19c0a7cda405f, type: 2}
       propertyPath: m_RootOrder
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 82167378685241112, guid: 5bf4cc814e546d2479f19c0a7cda405f,
-        type: 2}
-      propertyPath: m_Volume
-      value: 0.44
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5bf4cc814e546d2479f19c0a7cda405f, type: 2}

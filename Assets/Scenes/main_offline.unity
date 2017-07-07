@@ -147,29 +147,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4442011174283746, guid: 0ee53aca328211c409ccaa1ae63f76dd, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -96.565994
-      objectReference: {fileID: 0}
-    - target: {fileID: 114007829440297448, guid: 0ee53aca328211c409ccaa1ae63f76dd,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 20816898501229940, guid: 0ee53aca328211c409ccaa1ae63f76dd,
-        type: 2}
-      propertyPath: m_RenderingPath
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 20816898501229940, guid: 0ee53aca328211c409ccaa1ae63f76dd,
-        type: 2}
-      propertyPath: far clip plane
-      value: 100000
-      objectReference: {fileID: 0}
-    - target: {fileID: 4442011174283746, guid: 0ee53aca328211c409ccaa1ae63f76dd, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0ee53aca328211c409ccaa1ae63f76dd, type: 2}
   m_IsPrefabParent: 0
@@ -253,6 +230,16 @@ Prefab:
     - target: {fileID: 4230193993609190, guid: 119a6b32caaa295449625dc9bf9b3b22, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 23645187427297620, guid: 119a6b32caaa295449625dc9bf9b3b22,
+        type: 2}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23645187427297620, guid: 119a6b32caaa295449625dc9bf9b3b22,
+        type: 2}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 119a6b32caaa295449625dc9bf9b3b22, type: 2}

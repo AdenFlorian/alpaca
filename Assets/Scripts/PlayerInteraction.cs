@@ -57,6 +57,5 @@ public class PlayerInteraction : MonoBehaviour
 		spacePlane.OnPointedAt();
 		HighlightedSpacePlane = spacePlane;
 		//MyLogger.LogInfo("Hit spaceplane!");
-		spacePlane._disableInput = false;
 	}
 }
